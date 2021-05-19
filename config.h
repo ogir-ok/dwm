@@ -7,10 +7,11 @@ static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows sel
 static const unsigned int systrayspacing = 2;   /* systray spacing */
 static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
 static const int showsystray        = 1;     /* 0 means no systray */
+
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
+static const char *fonts[]          = { "Cantarell:size=8" };
+static const char dmenufont[]       = "Cantarell:size=8";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -23,21 +24,42 @@ static const char *colors[][3]      = {
 };
 
 static const char *const autostart[] = {
-	"st", NULL,
+	"/home/ogir_ok/dwm/autostart.sh", NULL,
 	NULL /* terminate */
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "Internet", "Messaging", "IDE", "Office", "Mail", "Media", "etc", "8", "9" };
+
 
 static const Rule rules[] = {
-	/* xprop(1):
-	 *	WM_CLASS(STRING) = instance, class
-	 *	WM_NAME(STRING) = title
-	 */
 	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "Gimp",       NULL,       NULL,       0,            True,        -1 },
+    { "guake",     NULL,       NULL,       0,            True,     -1 },
+    { "Guake",     NULL,       NULL,       0,            True,     -1 },
+	{ "firefox",    NULL,       NULL,       1,            False,       -1 },
+	{ "Firefox",    NULL,       NULL,       1,            False,       -1 },
+	{ "google-chrome",   NULL,       NULL,       1,            False,       -1 },
+	{ "Google-chrome",   NULL,       NULL,       1,            False,       -1 },
+	{ "gvim",       NULL,       NULL,       1 << 2,       False,       -1 },
+	{ "Gvim",       NULL,       NULL,       1 << 2,       False,       -1 },
+	{ "jetbrains-pycharm",       NULL,       NULL,       1 << 2,       False,       -1 },
+	{ "Prospect Mail",   NULL,       NULL,       1 << 4,       False,       -1 },
+	{ "prospect mail",   NULL,       NULL,       1 << 4,       False,       -1 },
+	{ "Mail",   NULL,       NULL,       1 << 4,       False,       -1 },
+	{ "Thunderbird",   NULL,       NULL,       1 << 4,       False,       -1 },
+	{ "microsoft teams - preview",      NULL,       NULL,       1 << 1,       False,       -1 },
+	{ "Microsoft Teams - Preview",      NULL,       NULL,       1 << 1,       False,       -1 },
+	{ "skype",      NULL,       NULL,       1 << 1,       False,       -1 },
+	{ "Skype",      NULL,       NULL,       1 << 1,       False,       -1 },
+	{ "telegram-desktop",      NULL,       NULL,       1 << 1,       False,       -1 },
+	{ "TelegramDesktop",      NULL,       NULL,       1 << 1,       False,       -1 },
+	{ "slack",      NULL,       NULL,       1 << 1,       False,       -1 },
+	{ "Slack",      NULL,       NULL,       1 << 1,       False,       -1 },
+	{ "zoom",      NULL,       NULL,       1 << 8,       False,       -1 },
+	{ "Deluge",      NULL,       NULL,       1 << 6,       False,       -1 },
+	{ "deluge",      NULL,       NULL,       1 << 6,       False,       -1 },
+	{ "PacketTracer6",      NULL,       NULL,       0,       True,       -1 },
 };
 
 /* layout(s) */
@@ -53,7 +75,7 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -67,12 +89,23 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *firefoxcmd[]  = { "firefox", NULL };
+static const char *gvimcmd[]  = { "gvim", NULL };
+static const char *pycharmcmd[]  = { "pycharm", NULL };
+static const char *chromiumcmd[]  = { "google-chrome-stable", NULL };
+
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
+	{ Mod1Mask|ControlMask,         XK_y,      spawn,          {.v = gvimcmd } },
+	{ Mod1Mask|ControlMask,         XK_u,      spawn,          {.v = pycharmcmd } },
+	{ Mod1Mask|ControlMask,         XK_i,      spawn,          {.v = firefoxcmd } },
+	{ Mod1Mask|ControlMask,         XK_o,      spawn,          {.v = chromiumcmd } },
+	{ MODKEY,                       XK_r,      spawn,          {.v = dmenucmd } },
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_grave,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
